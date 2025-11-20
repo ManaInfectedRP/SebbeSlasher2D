@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b2faf94dd7980442b6be84bc41fafaa, type: 3}
+  m_Name: Collect Gold
+  m_EditorClassIdentifier: Assembly-CSharp::Sebbe.AchivementSO
+  id: 1
+  achivementName: Gold Digger
+  description: You have picked up 5 gold coins!
+  icon: {fileID: 7675826601332790545, guid: 0e94a754e9828824ca29b9a4952d7428, type: 3}
+  requiredValue: 5
+  currentValue: 0
