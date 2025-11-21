@@ -10,7 +10,8 @@ namespace Sebbe
     {
         public static InventorySystem instance;
         // True when the inventory UI is open
-        [HideInInspector] public bool inventoryOpen = false;
+        public bool inventoryOpen = false;
+        
         [Header("UI References")]
         [SerializeField] private GameObject inventoryUI;
         [SerializeField] private Transform slotsHolder;
@@ -19,6 +20,10 @@ namespace Sebbe
 
         [Header("Equipement Slots")]
         public GameObject weaponSlot;
+        public GameObject helmetSlot;
+        public GameObject armorSlot;
+        public GameObject bootsSlot;
+        public GameObject keySlot;
 
         [Header("Instantiated Slots")]
         public List<GameObject> instantiatedSlots = new List<GameObject>();

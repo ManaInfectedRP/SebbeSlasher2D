@@ -14,15 +14,19 @@ namespace Sebbe
         [Header("Player Settings")]
         private float health;
         [SerializeField] private float maxHealth = 100f;
-        [SerializeField] private Slider healthSlider;
 
+        private float mana;
+        [SerializeField] private float maxMana = 100f;
+
+        private float stamina;
+        [SerializeField] private float maxStamina = 100f;
 
 
         [Header("Player Damage")]
         public int damage = 2;
         public float attackRange = 1f;
         public float attackRate = 1f;
-        [HideInInspector] public float nextAttackTime = 0f;
+        public float nextAttackTime = 0f;
         [HideInInspector] public bool isAttacking = false;
 
         
@@ -31,6 +35,17 @@ namespace Sebbe
         // `hasFoundSword` means the player currently has a weapon equipped (used for combat/animation).
         [HideInInspector] public bool hasObtainedSword = false;
         public bool hasFoundSword = false;
+        
+        // Reference to the currently equipped ItemSO (null when unequipped)
+        [HideInInspector] public ItemSO equippedWeapon;
+        [HideInInspector] public ItemSO equippedHelmet;
+        [HideInInspector] public ItemSO equippedArmorItem;
+        [HideInInspector] public ItemSO equippedBootsItem;
+        [HideInInspector] public ItemSO equippedKeyItem;
+        // True when a key item is currently equipped in the key slot
+        [HideInInspector] public bool hasEquippedKey = false;
+        // Mirror of equipment manager's damage reduction percent for quick access
+        [HideInInspector] public float damageReductionPercent = 0f;
 
         [Header("Animator")]
         [HideInInspector] public Animator animator;
@@ -61,6 +76,9 @@ namespace Sebbe
             baseDamage = damage;
             baseAttackRange = attackRange;
             baseAttackRate = attackRate;
+
+            health = maxHealth;
+            mana = maxMana;
         }
 
         // Public helper: other systems can query whether the player can attack/slide
@@ -86,10 +104,16 @@ namespace Sebbe
 
             if (animator == null) animator = GetComponent<Animator>();
 
+            // Store reference to equipped ItemSO
+            equippedWeapon = weaponItem;
+
             // Apply combat stats from item
             damage = weaponItem.weaponDamage;
             attackRange = weaponItem.weaponRange;
             attackRate = weaponItem.attackRate;
+            nextAttackTime = weaponItem.attackRate;
+
+            WorldStatsManager.instance.UpdateAttackStatsUI();
 
             hasFoundSword = true;
             if (animator != null) animator.SetBool("hasFoundSword", true);
@@ -109,6 +133,8 @@ namespace Sebbe
         public void UnequipWeapon()
         {
             hasFoundSword = false;
+            // Clear equipped reference
+            equippedWeapon = null;
             if (animator == null) animator = GetComponent<Animator>();
             if (animator != null)
             {
@@ -122,16 +148,97 @@ namespace Sebbe
             damage = baseDamage;
             attackRange = baseAttackRange;
             attackRate = baseAttackRate;
+            
+            WorldStatsManager.instance.UpdateAttackStatsUI();  
+        }
+
+        // Equip equipment item (helmet/armor/boots/key items). Mirrors weapon equip flow.
+        public void EquipEquipment(ItemSO equipmentItem)
+        {
+            if (equipmentItem == null)
+            {
+                Debug.LogWarning("EquipEquipment called with null ItemSO.");
+                return;
+            }
+
+            if (EquipmentManager.instance == null)
+            {
+                Debug.LogWarning("EquipmentManager.instance not found in scene.");
+                return;
+            }
+
+            ItemSO previous = EquipmentManager.instance.Equip(equipmentItem);
+
+            // Update local references for quick access
+            if (equipmentItem.isHelmet) equippedHelmet = equipmentItem;
+            if (equipmentItem.isArmor) equippedArmorItem = equipmentItem;
+            if (equipmentItem.isBoots) equippedBootsItem = equipmentItem;
+            if (equipmentItem.isKeyItem) equippedKeyItem = equipmentItem;
+            if (equipmentItem.isKeyItem) hasEquippedKey = true;
+
+            // If there was a previously equipped item, add it back to the player's inventory
+            if (previous != null && inventory != null)
+            {
+                inventory.AddItem(previous.itemID);
+            }
+
+            // Update mirrored damage reduction value
+            if (EquipmentManager.instance != null)
+            {
+                damageReductionPercent = EquipmentManager.instance.GetDamageReductionPercent();
+            }
+
+            // Refresh UI/stats displays
+            if (WorldStatsManager.instance != null)
+            {
+                WorldStatsManager.instance.UpdatePlayerUI();
+            }
+        }
+
+        // Unequip equipment by slot name: "helmet", "armor", "boots"
+        public void UnequipEquipment(string slotName)
+        {
+            if (EquipmentManager.instance == null)
+            {
+                Debug.LogWarning("EquipmentManager.instance not found in scene.");
+                return;
+            }
+
+            ItemSO unequipped = EquipmentManager.instance.Unequip(slotName);
+            if (unequipped == null)
+            {
+                Debug.LogWarning($"No equipment found in slot '{slotName}' to unequip.");
+                return;
+            }
+
+            // Clear local references
+            if (slotName.ToLower() == "helmet") equippedHelmet = null;
+            if (slotName.ToLower() == "armor") equippedArmorItem = null;
+            if (slotName.ToLower() == "boots") equippedBootsItem = null;
+            if (slotName.ToLower() == "key") equippedKeyItem = null;
+            if (slotName.ToLower() == "key") hasEquippedKey = false;
+
+            // Add back to player's inventory
+            if (inventory != null)
+            {
+                inventory.AddItem(unequipped.itemID);
+            }
+
+            // Update mirrored damage reduction value
+            if (EquipmentManager.instance != null)
+            {
+                damageReductionPercent = EquipmentManager.instance.GetDamageReductionPercent();
+            }
+
+            // Refresh UI/stats displays
+            if (WorldStatsManager.instance != null)
+            {
+                WorldStatsManager.instance.UpdatePlayerUI();
+            }
         }
 
         private void Start()
         {
-            health = maxHealth;
-            if (healthSlider != null)
-            {
-                healthSlider.maxValue = maxHealth;
-                healthSlider.value = health;
-            }
             // cache Rigidbody2D if present for knockback application
             rb = GetComponent<Rigidbody2D>();
 
@@ -149,15 +256,37 @@ namespace Sebbe
         }
 
         [HideInInspector] public Rigidbody2D rb;
+        // Last damage amount applied to player (after reduction). -1 means no damage taken yet.
+        [HideInInspector] public float lastDamageTaken = -1f;
 
         public void TakeDamage(float damage)
         {
-            health -= damage;
-            WorldEffectsManager.instance.SpawnBloodSplatter(transform.position, Quaternion.identity);
-            if (healthSlider != null)
+            // Apply damage reduction from equipped armor (percentage 0-100)
+            float reductionPercent = 0f;
+            if (EquipmentManager.instance != null)
             {
-                healthSlider.value = health;
+                reductionPercent = EquipmentManager.instance.GetDamageReductionPercent();
             }
+
+            float damageAfterReduction = damage * (1f - Mathf.Clamp01(reductionPercent / 100f));
+
+            health -= damageAfterReduction;
+
+            if (WorldEffectsManager.instance != null)
+            {
+                WorldEffectsManager.instance.SpawnBloodSplatter(transform.position, Quaternion.identity);
+            }
+
+            if (WorldStatsManager.instance != null)
+            {
+                WorldStatsManager.instance.UpdateHealthUI();
+            }
+
+            Debug.Log($"Player took {damageAfterReduction} damage (reduced from {damage} by {reductionPercent}%).");
+
+            // Record last damage taken for UI display
+            lastDamageTaken = damageAfterReduction;
+
             if (health <= 0)
             {
                 Die();
@@ -174,6 +303,53 @@ namespace Sebbe
                 rb.linearVelocity = velocity;
             }
         }
+
+        #region Getters for WorldStatsManager
+        public float GetCurrentHealth()
+        {
+            return health;
+        }
+
+        public float GetMaxHealth()
+        {
+            return maxHealth;
+        }
+
+        public float GetCurrentMana()
+        {
+            return mana;
+        }
+        public float GetMaxMana()
+        {
+            return maxMana;
+        }
+        
+        public float GetCurrentStamina()
+        {
+            return stamina;
+        }
+
+        public float GetMaxStamina()
+        {
+            return maxStamina;
+        }
+
+        public int GetDamage()
+        {
+            return damage;
+        }
+
+        public float GetAttackRange()
+        {
+            return attackRange;
+        }
+
+        public float GetAttackRate()
+        {
+            return attackRate;
+        }
+
+        #endregion
 
         private void Die()
         {

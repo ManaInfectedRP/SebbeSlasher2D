@@ -80,5 +80,122 @@ namespace Sebbe
                 Debug.LogWarning($"Item with ID {itemID} not found in player inventory.");
             }
         }
+
+        // Equip an item that's currently in the player's inventory.
+        // Swaps with currently equipped item for the same equipment slot (if any).
+        public void EquipItem(int itemID)
+        {
+            ItemSO item = currentPlayerItems.Find(i => i.itemID == itemID);
+            if (item == null)
+            {
+                Debug.LogWarning($"Item with ID {itemID} not found in player inventory.");
+                return;
+            }
+
+            if (!item.isEquipment && !item.isKeyItem)
+            {
+                Debug.LogWarning($"Item {item.itemName} (ID {itemID}) is not equippable.");
+                return;
+            }
+
+            // Find the UI slot showing this item (so we can replace it with the swapped item)
+            GameObject foundSlotGO = null;
+            for (int i = 0; i < InventorySystem.instance.instantiatedSlots.Count; i++)
+            {
+                InventorySlot slot = InventorySystem.instance.instantiatedSlots[i].GetComponent<InventorySlot>();
+                if (slot != null && slot.GetCurrentItemID() == itemID)
+                {
+                    foundSlotGO = InventorySystem.instance.instantiatedSlots[i];
+                    break;
+                }
+            }
+
+            // Equip via EquipmentManager
+            ItemSO previous = null;
+            if (EquipmentManager.instance != null)
+            {
+                previous = EquipmentManager.instance.Equip(item);
+            }
+            else
+            {
+                Debug.LogWarning("EquipmentManager.instance not found in scene.");
+            }
+
+            // Remove the item from inventory
+            currentPlayerItems.Remove(item);
+
+            // If there was a previously equipped item, add it back into inventory and into the same UI slot if available
+            if (previous != null)
+            {
+                currentPlayerItems.Add(previous);
+                if (foundSlotGO != null)
+                {
+                    InventorySlot uiSlot = foundSlotGO.GetComponent<InventorySlot>();
+                    if (uiSlot != null)
+                        uiSlot.SetItem(previous);
+                }
+            }
+            else
+            {
+                // No previous item; clear the UI slot that showed this item
+                if (foundSlotGO != null)
+                {
+                    InventorySlot uiSlot = foundSlotGO.GetComponent<InventorySlot>();
+                    if (uiSlot != null)
+                        uiSlot.SetItem(null);
+                }
+            }
+
+            Debug.Log($"Equipped {item.itemName}" + (previous != null ? $" (swapped with {previous.itemName})" : ""));
+        }
+
+        // Unequip an item by equipment slot name ("helmet", "armor", "boots").
+        // Attempts to place the unequipped item back into an empty inventory slot.
+        public void UnequipItem(string slotName)
+        {
+            if (EquipmentManager.instance == null)
+            {
+                Debug.LogWarning("EquipmentManager.instance not found in scene.");
+                return;
+            }
+
+            ItemSO unequipped = EquipmentManager.instance.Unequip(slotName);
+            if (unequipped == null)
+            {
+                Debug.LogWarning($"No item equipped in slot '{slotName}' to unequip.");
+                return;
+            }
+
+            // Find first empty UI slot
+            int emptyIndex = -1;
+            for (int i = 0; i < InventorySystem.instance.instantiatedSlots.Count; i++)
+            {
+                InventorySlot slot = InventorySystem.instance.instantiatedSlots[i].GetComponent<InventorySlot>();
+                if (slot != null && slot.IsEmpty())
+                {
+                    emptyIndex = i;
+                    break;
+                }
+            }
+
+            if (emptyIndex == -1)
+            {
+                Debug.LogWarning("No empty inventory slot available to place unequipped item.");
+                // Still add to the logical inventory so player doesn't lose the item
+                currentPlayerItems.Add(unequipped);
+                return;
+            }
+
+            currentPlayerItems.Add(unequipped);
+            InventorySystem.instance.instantiatedSlots[emptyIndex].GetComponent<InventorySlot>().SetItem(unequipped);
+            Debug.Log($"Unequipped {unequipped.itemName} into slot {emptyIndex}.");
+        }
+
+        // Return the current stamina % (0-100) derived from equipped armor's damage reduction.
+        public float GetStaminaPercent()
+        {
+            if (EquipmentManager.instance == null) return 0f;
+            return EquipmentManager.instance.GetStaminaPercent();
+        }
     }
 }
