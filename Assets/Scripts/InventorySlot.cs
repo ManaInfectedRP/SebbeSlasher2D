@@ -145,6 +145,34 @@ namespace Sebbe
                 return;
             }
 
+            // If this is the amulet slot, unequip amulet and return to inventory
+            if (InventorySystem.instance != null && InventorySystem.instance.amuletSlot == this.gameObject)
+            {
+                if (currentItem == null) return;
+                ItemSO equipped = currentItem;
+                if (Player.instance != null)
+                {
+                    Player.instance.UnequipEquipment("amulet");
+                }
+                // Inventory update handled by Player.UnequipEquipment()
+                SetItem(null);
+                return;
+            }
+
+            // If this is the ring slot, unequip ring and return to inventory
+            if (InventorySystem.instance != null && InventorySystem.instance.ringSlot == this.gameObject)
+            {
+                if (currentItem == null) return;
+                ItemSO equipped = currentItem;
+                if (Player.instance != null)
+                {
+                    Player.instance.UnequipEquipment("ring");
+                }
+                // Inventory update handled by Player.UnequipEquipment()
+                SetItem(null);
+                return;
+            }
+
             // Only equip weapons or equipment from regular inventory slots
             if (currentItem == null) return;
 
@@ -157,6 +185,8 @@ namespace Sebbe
                 if (itemToEquip.isHelmet && InventorySystem.instance != null) targetSlot = InventorySystem.instance.helmetSlot;
                 else if (itemToEquip.isArmor && InventorySystem.instance != null) targetSlot = InventorySystem.instance.armorSlot;
                 else if (itemToEquip.isBoots && InventorySystem.instance != null) targetSlot = InventorySystem.instance.bootsSlot;
+                else if (itemToEquip.isAmulet && InventorySystem.instance != null) targetSlot = InventorySystem.instance.amuletSlot;
+                else if (itemToEquip.isRing && InventorySystem.instance != null) targetSlot = InventorySystem.instance.ringSlot;
 
                 if (targetSlot != null)
                 {

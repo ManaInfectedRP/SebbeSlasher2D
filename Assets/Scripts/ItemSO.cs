@@ -34,6 +34,17 @@ namespace Sebbe
         public int defenseBonus;
         public float weight;
 
+        [Header("Accessory Settings")]
+        public bool isAmulet = false;
+        public bool healthRegenFromAmulet = false;
+        public float healthRegenRateFromAmulet;
+        public float healthAmountFromAmulet;
+        
+        public bool isRing = false;
+        public float increasedDamageFromCritFromRing;
+        public float critChanceFromRing;
+
+
         [Header("Consumable Settings")]
         public bool isConsumable = false;
         public int healthRestore;

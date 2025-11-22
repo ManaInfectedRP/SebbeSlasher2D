@@ -15,6 +15,6 @@ MonoBehaviour:
   id: 0
   achivementName: Sword Pickup
   description: Congrats on Picking up your first sword!
-  icon: {fileID: 21300000, guid: d5b1db0ccb487994591d88e54ac83155, type: 3}
+  icon: {fileID: 6023301781473133370, guid: 8b35cb77e841249438844828998b0460, type: 3}
   requiredValue: 1
   currentValue: 0

@@ -21,8 +21,10 @@ namespace Sebbe
         [Header("Equipement Slots")]
         public GameObject weaponSlot;
         public GameObject helmetSlot;
+        public GameObject amuletSlot;
         public GameObject armorSlot;
         public GameObject bootsSlot;
+        public GameObject ringSlot;
         public GameObject keySlot;
 
         [Header("Instantiated Slots")]

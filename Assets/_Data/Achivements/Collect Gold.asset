@@ -15,6 +15,6 @@ MonoBehaviour:
   id: 1
   achivementName: Gold Digger
   description: You have picked up 5 gold coins!
-  icon: {fileID: 7675826601332790545, guid: 0e94a754e9828824ca29b9a4952d7428, type: 3}
+  icon: {fileID: -2164501505779383671, guid: 706463fd02167244090eb49c880ab585, type: 3}
   requiredValue: 5
   currentValue: 0

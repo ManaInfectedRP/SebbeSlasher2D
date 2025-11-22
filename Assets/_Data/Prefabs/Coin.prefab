@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9168494857382108520}
   - component: {fileID: 8406951821241095458}
-  - component: {fileID: 2560169091048075260}
   - component: {fileID: 8912580931926400112}
   - component: {fileID: 6925729056029378321}
   m_Layer: 0
@@ -82,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7675826601332790545, guid: 0e94a754e9828824ca29b9a4952d7428, type: 3}
+  m_Sprite: {fileID: -2164501505779383671, guid: 706463fd02167244090eb49c880ab585, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,28 +92,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2560169091048075260
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5559774806167914620}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: a4af383193ce7c54fb54d623b944a26f, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!58 &8912580931926400112
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -164,4 +141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.CoinCollectable
   coinManager: {fileID: 0}
+  bounceHeight: 0.05
+  rotationSpeed: 50
+  initialPosition: {x: 0, y: 0, z: 0}
   value: 1

@@ -24,6 +24,7 @@ namespace Sebbe
         [SerializeField] private TextMeshProUGUI currentAttackDamageText;
         [SerializeField] private TextMeshProUGUI currentAttackRangeText;
         [SerializeField] private TextMeshProUGUI currentAttackRateText;
+        [SerializeField] private TextMeshProUGUI critChanceText;
 
         private void Awake()
         {
@@ -106,6 +107,20 @@ namespace Sebbe
             if (currentAttackRateText != null)
             {
                 currentAttackRateText.text = $"Attack Rate: {player.GetAttackRate()}";
+            }
+
+            if (critChanceText != null)
+            {
+                float crit = 0f;
+                if (EquipmentManager.instance != null && EquipmentManager.instance.equippedRing != null)
+                {
+                    crit = EquipmentManager.instance.equippedRing.critChanceFromRing;
+                }
+                else if (player != null)
+                {
+                    crit = player.equippedRing != null ? player.equippedRing.critChanceFromRing : 0f;
+                }
+                critChanceText.text = $"Crit Chance: {crit.ToString("F1")} %";
             }
 
             if (damageReductionText != null)

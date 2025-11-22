@@ -13,10 +13,26 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
   itemName: Default Sword
-  itemIcon: {fileID: 21300000, guid: 7ca94f814bed4ae4cbac76b873914417, type: 3}
+  itemDescription: 
+  itemIcon: {fileID: 6023301781473133370, guid: 8b35cb77e841249438844828998b0460, type: 3}
   itemID: 1
+  isStackable: 0
+  maxStackSize: 1
   isWeapon: 1
   weaponAnimatorOverride: {fileID: 22100000, guid: 2b22edd01f04c5e4eb7e4b3a311e00aa, type: 2}
   weaponDamage: 2
   weaponRange: 0.65
   attackRate: 1
+  isRangedWeapon: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
+  isEquipment: 0
+  isArmor: 0
+  isHelmet: 0
+  isBoots: 0
+  defenseBonus: 0
+  weight: 0
+  isConsumable: 0
+  healthRestore: 0
+  staminaRestore: 0
+  isKeyItem: 0

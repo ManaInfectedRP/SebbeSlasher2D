@@ -42,10 +42,15 @@ namespace Sebbe
         [HideInInspector] public ItemSO equippedArmorItem;
         [HideInInspector] public ItemSO equippedBootsItem;
         [HideInInspector] public ItemSO equippedKeyItem;
+        [HideInInspector] public ItemSO equippedAmulet;
+        [HideInInspector] public ItemSO equippedRing;
         // True when a key item is currently equipped in the key slot
         [HideInInspector] public bool hasEquippedKey = false;
         // Mirror of equipment manager's damage reduction percent for quick access
         [HideInInspector] public float damageReductionPercent = 0f;
+        // Amulet regen bookkeeping
+        private float nextAmuletHealTime = 0f;
+        [HideInInspector] public bool hasEquippedAmulet = false;
 
         [Header("Animator")]
         [HideInInspector] public Animator animator;
@@ -175,6 +180,8 @@ namespace Sebbe
             if (equipmentItem.isBoots) equippedBootsItem = equipmentItem;
             if (equipmentItem.isKeyItem) equippedKeyItem = equipmentItem;
             if (equipmentItem.isKeyItem) hasEquippedKey = true;
+            if (equipmentItem.isAmulet) { equippedAmulet = equipmentItem; hasEquippedAmulet = true; }
+            if (equipmentItem.isRing) { equippedRing = equipmentItem; }
 
             // If there was a previously equipped item, add it back to the player's inventory
             if (previous != null && inventory != null)
@@ -217,6 +224,8 @@ namespace Sebbe
             if (slotName.ToLower() == "boots") equippedBootsItem = null;
             if (slotName.ToLower() == "key") equippedKeyItem = null;
             if (slotName.ToLower() == "key") hasEquippedKey = false;
+            if (slotName.ToLower() == "amulet") { equippedAmulet = null; hasEquippedAmulet = false; }
+            if (slotName.ToLower() == "ring") { equippedRing = null; }
 
             // Add back to player's inventory
             if (inventory != null)
@@ -244,6 +253,30 @@ namespace Sebbe
 
             // Ensure animator is assigned and set the appropriate controller
             if (animator == null) animator = GetComponent<Animator>();
+        }
+
+        private void LateUpdate()
+        {
+            // Handle amulet-based health regeneration as periodic ticks
+            if (hasEquippedAmulet && equippedAmulet != null && equippedAmulet.healthRegenFromAmulet)
+            {
+                float interval = Mathf.Max(0.1f, equippedAmulet.healthRegenRateFromAmulet);
+                if (Time.time >= nextAmuletHealTime)
+                {
+                    float amount = equippedAmulet.healthAmountFromAmulet;
+                    health = Mathf.Min(maxHealth, health + amount);
+                    if (WorldStatsManager.instance != null)
+                        WorldStatsManager.instance.UpdateHealthUI();
+                    nextAmuletHealTime = Time.time + interval;
+
+                    // Spawn green floating text above player for heal
+                    if (FloatingTextManager.instance != null)
+                    {
+                        Color healColor = Color.green;
+                        FloatingTextManager.instance.Spawn($"+{amount}", transform.position + Vector3.up * 1.2f, healColor, false, 1f);
+                    }
+                }
+            }
         }
 
         public void Update()
@@ -286,6 +319,13 @@ namespace Sebbe
 
             // Record last damage taken for UI display
             lastDamageTaken = damageAfterReduction;
+
+            // Spawn floating text above player for damage taken
+            if (FloatingTextManager.instance != null)
+            {
+                Color dmgColor = Color.red;
+                FloatingTextManager.instance.Spawn(((int)Mathf.Ceil(damageAfterReduction)).ToString(), transform.position + Vector3.up * 1.2f, dmgColor, false, 1.2f);
+            }
 
             if (health <= 0)
             {

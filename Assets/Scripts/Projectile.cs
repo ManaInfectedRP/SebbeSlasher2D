@@ -14,6 +14,7 @@ namespace Sebbe
 
         private Vector2 direction = Vector2.right;
         private Rigidbody2D rb;
+        private bool wasCrit = false;
 
         private void Awake()
         {
@@ -25,11 +26,12 @@ namespace Sebbe
             if (lifetime > 0f) Destroy(gameObject, lifetime);
         }
 
-        public void Initialize(Vector2 dir, float spd, int dmg)
+        public void Initialize(Vector2 dir, float spd, int dmg, bool crit = false)
         {
             direction = dir.normalized;
             speed = spd;
             damage = dmg;
+            wasCrit = crit;
 
             if (rb != null)
             {
@@ -49,6 +51,16 @@ namespace Sebbe
             {
                 transform.Translate(direction * speed * Time.deltaTime, Space.World);
             }
+            else
+            {
+                // Rotate the projectile to point in the direction of its velocity for a realistic look
+                Vector2 vel = rb.linearVelocity;
+                if (vel.sqrMagnitude > 0.0001f)
+                {
+                    float angle = Mathf.Atan2(vel.y, vel.x) * Mathf.Rad2Deg;
+                    transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                }
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -63,6 +75,12 @@ namespace Sebbe
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
+                // Spawn floating text at enemy position for projectile hits
+                if (FloatingTextManager.instance != null)
+                {
+                    Color c = wasCrit ? new Color(1f, 0.55f, 0f) : Color.red; // orange for crits
+                    FloatingTextManager.instance.Spawn(damage.ToString(), enemy.transform.position + Vector3.up * 1f, c, wasCrit, 1f);
+                }
                 Destroy(gameObject);
                 return;
             }

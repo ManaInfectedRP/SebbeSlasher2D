@@ -50,8 +50,9 @@ namespace Sebbe
             }
 
             // Left click to attack (only if cooldown finished, not already attacking,
-            // the click didn't happen over UI, and the inventory UI is not open)
-            if (Input.GetMouseButtonDown(0) &&
+            // the click didn't happen over UI, and the inventory UI is not open).
+            // Use GetMouseButton so holding the mouse button will continue attacks.
+            if (Input.GetMouseButton(0) &&
                 !InventorySystem.instance.inventoryOpen &&
                 player.nextAttackTime <= 0f && !attackInProgress)
             {
@@ -216,27 +217,10 @@ namespace Sebbe
 
             Vector3 spawnPos = attackPoint != null ? attackPoint.position : player.transform.position;
 
-            // Aim towards the mouse world position if possible; otherwise fallback to player's facing
-            Vector2 dir = Vector2.right;
-            if (Camera.main != null)
-            {
-                Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                mouseWorld.z = spawnPos.z;
-                dir = (mouseWorld - spawnPos);
-                if (dir.sqrMagnitude < 0.0001f)
-                {
-                    // if mouse is essentially on the spawn point, use player facing
-                    float facingSign = Mathf.Sign(player.transform.localScale.x);
-                    dir = new Vector2(facingSign != 0f ? facingSign : 1f, 0f);
-                }
-                dir = dir.normalized;
-            }
-            else
-            {
-                // Camera missing — fallback to facing direction
-                float facingSign = Mathf.Sign(player.transform.localScale.x);
-                dir = new Vector2(facingSign != 0f ? facingSign : 1f, 0f);
-            }
+            // Fire strictly in the direction the player is facing (left/right).
+            float facingSign = Mathf.Sign(player.transform.localScale.x);
+            if (facingSign == 0f) facingSign = 1f; // default to right
+            Vector2 dir = new Vector2(facingSign, 0f);
 
             // If the projectile prefab defines a spawnHeight, offset spawn position vertically
             float prefabSpawnHeight = 0f;
@@ -251,10 +235,25 @@ namespace Sebbe
             GameObject projGO = Instantiate(weapon.projectilePrefab, finalSpawnPos, Quaternion.identity);
 
             Projectile proj = projGO.GetComponent<Projectile>();
-            int dmgToDeal = overrideDamage >= 0 ? overrideDamage : weapon.weaponDamage;
+            int baseDamage = overrideDamage >= 0 ? overrideDamage : weapon.weaponDamage;
+            bool wasCrit = false;
+            int dmgToDeal = baseDamage;
+
+            // Apply ring crit chance/damage to projectiles as well
+            if (player != null && player.equippedRing != null && player.equippedRing.isRing)
+            {
+                float critChance = player.equippedRing.critChanceFromRing;
+                float critBonus = player.equippedRing.increasedDamageFromCritFromRing;
+                if (Random.value <= Mathf.Clamp01(critChance / 100f))
+                {
+                    dmgToDeal = Mathf.CeilToInt(baseDamage * (1f + critBonus / 100f));
+                    wasCrit = true;
+                }
+            }
+
             if (proj != null)
             {
-                proj.Initialize(dir.normalized, weapon.projectileSpeed, dmgToDeal);
+                proj.Initialize(dir.normalized, weapon.projectileSpeed, dmgToDeal, wasCrit);
             }
             else
             {
@@ -291,7 +290,29 @@ namespace Sebbe
                 Enemy enemy = col.GetComponent<Enemy>();
                 if (enemy != null)
                 {
-                    enemy.TakeDamage(damage);
+                    int finalDamage = damage;
+                    // Apply ring crit chance/damage if a ring is equipped
+                    bool wasCrit = false;
+                    if (player != null && player.equippedRing != null && player.equippedRing.isRing)
+                    {
+                        float critChance = player.equippedRing.critChanceFromRing;
+                        float critBonus = player.equippedRing.increasedDamageFromCritFromRing;
+                        if (Random.value <= Mathf.Clamp01(critChance / 100f))
+                        {
+                            finalDamage = Mathf.CeilToInt(damage * (1f + critBonus / 100f));
+                            wasCrit = true;
+                            Debug.Log($"Critical hit! {damage} -> {finalDamage} (bonus {critBonus}%)");
+                        }
+                    }
+
+                    enemy.TakeDamage(finalDamage);
+
+                    // Spawn floating text at enemy position
+                    if (FloatingTextManager.instance != null)
+                    {
+                        Color c = wasCrit ? new Color(1f, 0.5f, 0f) : Color.red; // orange for crit, red otherwise
+                        FloatingTextManager.instance.Spawn(finalDamage.ToString(), enemy.transform.position + Vector3.up * 1f, c, wasCrit, 1.2f);
+                    }
                 }
             }
         }

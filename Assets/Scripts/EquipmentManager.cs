@@ -11,6 +11,8 @@ namespace Sebbe
         public ItemSO equippedHelmet;
         public ItemSO equippedArmor;
         public ItemSO equippedBoots;
+        public ItemSO equippedAmulet;
+        public ItemSO equippedRing;
 
         // Key item slot (single). Use this when a key needs to be placed into a dedicated slot.
         public ItemSO equippedKeyItem;
@@ -50,6 +52,20 @@ namespace Sebbe
             {
                 ItemSO previous = equippedBoots;
                 equippedBoots = item;
+                UpdateDamageReduction();
+                return previous;
+            }
+            else if (item.isAmulet)
+            {
+                ItemSO previous = equippedAmulet;
+                equippedAmulet = item;
+                UpdateDamageReduction();
+                return previous;
+            }
+            else if (item.isRing)
+            {
+                ItemSO previous = equippedRing;
+                equippedRing = item;
                 UpdateDamageReduction();
                 return previous;
             }
@@ -94,6 +110,20 @@ namespace Sebbe
             {
                 ItemSO prev = equippedKeyItem;
                 equippedKeyItem = null;
+                UpdateDamageReduction();
+                return prev;
+            }
+            if (slot == "amulet")
+            {
+                ItemSO prev = equippedAmulet;
+                equippedAmulet = null;
+                UpdateDamageReduction();
+                return prev;
+            }
+            if (slot == "ring")
+            {
+                ItemSO prev = equippedRing;
+                equippedRing = null;
                 UpdateDamageReduction();
                 return prev;
             }

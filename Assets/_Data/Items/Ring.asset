@@ -10,28 +10,35 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2443ee5f889eb9f40bc47e61615fb075, type: 3}
-  m_Name: Staff
+  m_Name: Ring
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
-  itemName: Staff
+  itemName: Ring
   itemDescription: 
-  itemIcon: {fileID: -1224949926982994394, guid: 0e768f38cdfab574d8f223ba306dbca7, type: 3}
-  itemID: 2
+  itemIcon: {fileID: 2631982240551660589, guid: 7ca0517e2f0852a4ca522c1cf34609d0, type: 3}
+  itemID: 0
   isStackable: 0
   maxStackSize: 1
-  isWeapon: 1
-  weaponAnimatorOverride: {fileID: 22100000, guid: 7962e256ffa44e543a2a999535f2f0c2, type: 2}
-  weaponDamage: 3
-  weaponRange: 0.9
-  attackRate: 1.5
+  isWeapon: 0
+  weaponAnimatorOverride: {fileID: 0}
+  weaponDamage: 0
+  weaponRange: 0
+  attackRate: 0
   isRangedWeapon: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 0
-  isEquipment: 0
+  isEquipment: 1
   isArmor: 0
   isHelmet: 0
   isBoots: 0
   defenseBonus: 0
   weight: 0
+  isAmulet: 0
+  healthRegenFromAmulet: 0
+  healthRegenRateFromAmulet: 0
+  healthAmountFromAmulet: 0
+  isRing: 1
+  increasedDamageFromCritFromRing: 3
+  critChanceFromRing: 10
   isConsumable: 0
   healthRestore: 0
   staminaRestore: 0
