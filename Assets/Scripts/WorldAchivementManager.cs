@@ -62,8 +62,17 @@ namespace Sebbe
         {
             if (Input.GetKeyDown(KeyCode.Y))
             {
-                achivementPanel.SetActive(!achivementPanel.activeSelf);
-                if (achivementPanel.activeSelf)
+                ToggleAchivementPanel();
+            }
+        }
+
+        public void ToggleAchivementPanel()
+        {
+            if (achivementPanel != null)
+            {
+                bool newState = !achivementPanel.activeSelf;
+                achivementPanel.SetActive(newState);
+                if (newState)
                 {
                     PopulateAchivementList();
                 }

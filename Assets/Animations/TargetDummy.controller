@@ -79,7 +79,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dummy 0 0
+  m_Name: Dummy_Hit
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -93,7 +93,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 94e46effe7c4e1948ad5f7d6a814182d, type: 2}
+  m_Motion: {fileID: 7400000, guid: 5b7ab87803e59ad489cad489206c9ee1, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -232,7 +232,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dummy 0
+  m_Name: Dummy Doesnt Walk
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -286,7 +286,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dummy 0 0 0
+  m_Name: Dummy Deals 1 dmg?
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -300,7 +300,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 94e46effe7c4e1948ad5f7d6a814182d, type: 2}
+  m_Motion: {fileID: 7400000, guid: d7719c3f807b18844be88001be63a07d, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

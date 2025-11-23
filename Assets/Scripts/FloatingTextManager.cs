@@ -30,6 +30,12 @@ namespace Sebbe
 
             // Choose font size based on type
             float fontSize = isCrit ? 4f : 3f;
+            // Ensure the text renders above other sprites by setting renderer order in layer
+            var rend = tmp.GetComponent<Renderer>();
+            if (rend != null)
+            {
+                rend.sortingOrder = 99;
+            }
             // Slight upward velocity
             Vector3 vel = new Vector3(0f, .5f + (isCrit ? 0.3f : 0f), 0f);
             ft.Initialize(text, color, vel, duration, fontSize);

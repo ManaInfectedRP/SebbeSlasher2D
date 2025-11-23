@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2443ee5f889eb9f40bc47e61615fb075, type: 3}
-  m_Name: Bow
+  m_Name: Spear
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
-  itemName: Bow
+  itemName: Spear
   itemDescription: 
-  itemIcon: {fileID: -6731720666931477841, guid: 81ff2dda7509c2841aa4ef466583cccc, type: 3}
-  itemID: 3
+  itemIcon: {fileID: 945118768491651221, guid: c530fa3b54a3c7c48b8f60954396b36d, type: 3}
+  itemID: 0
   isStackable: 0
   maxStackSize: 1
   isWeapon: 1
-  weaponAnimatorOverride: {fileID: 22100000, guid: 9cd643447a2450d46baa4efe4b21e1fd, type: 2}
+  weaponAnimatorOverride: {fileID: 22100000, guid: 40b5c355323df5f4dbf1f4a554d55801, type: 2}
   weaponDamage: 2
-  weaponRange: 1
-  attackRate: 2
-  isRangedWeapon: 1
-  projectilePrefab: {fileID: 7405870865941519548, guid: d55e75a4c6a06334e9eeb199ed589503, type: 3}
-  projectileSpeed: 5
+  weaponRange: 0.65
+  attackRate: 1.5
+  isRangedWeapon: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
   isEquipment: 0
   isArmor: 0
   isHelmet: 0

@@ -18,6 +18,9 @@ namespace Sebbe
         [SerializeField] private GameObject slotPrefab;
         [SerializeField] private int slotCount = 42;
 
+        [Header("UI Hide")]
+        [SerializeField] private GameObject backgroundStats;
+
         [Header("Equipement Slots")]
         public GameObject weaponSlot;
         public GameObject helmetSlot;
@@ -68,6 +71,7 @@ namespace Sebbe
                 bool newState = !inventoryUI.activeSelf;
                 inventoryUI.SetActive(newState);
                 inventoryOpen = newState;
+                backgroundStats.SetActive(!inventoryOpen);
             }
         }
 
