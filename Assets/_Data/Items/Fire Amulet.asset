@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2443ee5f889eb9f40bc47e61615fb075, type: 3}
-  m_Name: Sword
+  m_Name: Fire Amulet
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
-  itemName: Default Sword
+  itemName: Fire Amulet
   itemDescription: 
-  itemIcon: {fileID: 6023301781473133370, guid: 8b35cb77e841249438844828998b0460, type: 3}
-  itemID: 1
+  itemIcon: {fileID: 1657266229, guid: 3024ce0c94ad91e4ebfe843b207908fc, type: 3}
+  itemID: 0
   isStackable: 0
   maxStackSize: 1
-  isWeapon: 1
-  weaponAnimatorOverride: {fileID: 22100000, guid: 2b22edd01f04c5e4eb7e4b3a311e00aa, type: 2}
-  weaponDamage: 2
-  weaponRange: 0.65
-  attackRate: 1
+  isWeapon: 0
+  weaponAnimatorOverride: {fileID: 0}
+  weaponDamage: 0
+  weaponRange: 0
+  attackRate: 0
   isRangedWeapon: 0
   projectilePrefab: {fileID: 0}
   projectileSpeed: 0
-  isEquipment: 0
+  isEquipment: 1
   isArmor: 0
   isHelmet: 0
   isBoots: 0
   defenseBonus: 0
   weight: 0
-  isAmulet: 0
-  healthRegenFromAmulet: 0
-  healthRegenRateFromAmulet: 0
-  healthAmountFromAmulet: 0
+  isAmulet: 1
+  healthRegenFromAmulet: 1
+  healthRegenRateFromAmulet: 5
+  healthAmountFromAmulet: 10
   isRing: 0
   increasedDamageFromCritFromRing: 0
   critChanceFromRing: 0
