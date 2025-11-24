@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2443ee5f889eb9f40bc47e61615fb075, type: 3}
   m_Name: Amulet
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
-  itemName: 
+  itemName: Amulet
   itemDescription: 
   itemIcon: {fileID: 7037350150398392767, guid: 96a97a32d92a12045b11bd03ec388b1b, type: 3}
-  itemID: 0
+  itemID: 8
   isStackable: 0
   maxStackSize: 1
   isWeapon: 0

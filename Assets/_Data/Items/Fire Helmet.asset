@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Iron Helmet
   itemDescription: 
   itemIcon: {fileID: 2069462016, guid: 3024ce0c94ad91e4ebfe843b207908fc, type: 3}
-  itemID: 0
+  itemID: 14
   isStackable: 0
   maxStackSize: 1
   isWeapon: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
   isHelmet: 1
   isBoots: 0
   defenseBonus: 10
-  weight: 0
+  weight: 10
   isAmulet: 0
   healthRegenFromAmulet: 0
   healthRegenRateFromAmulet: 0

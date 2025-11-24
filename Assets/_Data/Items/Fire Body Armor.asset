@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Fire Iron Armor
   itemDescription: 
   itemIcon: {fileID: -1642573717, guid: 3024ce0c94ad91e4ebfe843b207908fc, type: 3}
-  itemID: 0
+  itemID: 12
   isStackable: 0
   maxStackSize: 1
   isWeapon: 0
@@ -31,7 +31,7 @@ MonoBehaviour:
   isHelmet: 0
   isBoots: 0
   defenseBonus: 10
-  weight: 0
+  weight: 5
   isAmulet: 0
   healthRegenFromAmulet: 0
   healthRegenRateFromAmulet: 0

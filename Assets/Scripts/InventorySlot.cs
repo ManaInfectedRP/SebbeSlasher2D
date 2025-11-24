@@ -1,13 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.EventSystems;
 
 namespace Sebbe
 {
-    public class InventorySlot : MonoBehaviour, IPointerClickHandler
+    public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [SerializeField] private Image itemIcon;
         private ItemSO currentItem;
+        [Header("Per-Slot Tooltip (optional)")]
+        [Tooltip("Optional panel owned by this slot to show item info when hovered. If unset, global InventoryTooltip is used.")]
+        [SerializeField] private GameObject tooltipPanel;
+        [SerializeField] private TextMeshProUGUI tooltipPanelText;
+        [SerializeField] private Vector2 panelOffset = new Vector2(0f, 40f);
         
         public void SetItem(ItemSO item)
         {
@@ -324,6 +330,116 @@ namespace Sebbe
             }
 
             SetItem(null);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            if (currentItem == null) return;
+
+            // If a per-slot tooltip panel has been assigned, show and populate it
+            if (tooltipPanel != null && tooltipPanelText != null)
+            {
+                tooltipPanel.SetActive(true);
+                tooltipPanelText.text = BuildTooltipText(currentItem);
+
+                // Position the tooltip panel in the Canvas so it aligns correctly with the slot
+                var slotRT = GetComponent<RectTransform>();
+                var panelRT = tooltipPanel.GetComponent<RectTransform>();
+                // Prefer the slot's parent canvas so coordinates match the slot's UI space
+                Canvas slotCanvas = slotRT.GetComponentInParent<Canvas>();
+                Canvas targetCanvas = slotCanvas != null ? slotCanvas : tooltipPanel.GetComponentInParent<Canvas>();
+                if (slotRT != null && panelRT != null && targetCanvas != null)
+                {
+                    // Reparent the panel to the target canvas so anchoredPosition is valid
+                    panelRT.SetParent(targetCanvas.transform, true);
+
+                    // Ensure layout elements are rebuilt so size matches content
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(panelRT);
+
+                    RectTransform canvasRect = targetCanvas.GetComponent<RectTransform>();
+                    Camera cam = targetCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : targetCanvas.worldCamera;
+
+                    // Convert the slot's world position to a local point in the target canvas
+                    Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(cam, slotRT.position);
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, cam, out Vector2 localPoint);
+
+                    // Use top-left pivot for predictable offsetting
+                    panelRT.pivot = new Vector2(0f, 1f);
+                    panelRT.anchoredPosition = localPoint + panelOffset;
+                }
+
+                    // Ensure tooltip panel does not block pointer events (avoids flicker)
+                    CanvasGroup cg = tooltipPanel.GetComponent<CanvasGroup>();
+                    if (cg == null) cg = tooltipPanel.AddComponent<CanvasGroup>();
+                    cg.blocksRaycasts = false;
+                    if (tooltipPanelText != null) tooltipPanelText.raycastTarget = false;
+
+                return;
+            }
+
+            // Fallback to global tooltip if no per-slot panel assigned
+            if (InventoryTooltip.instance != null)
+            {
+                InventoryTooltip.instance.Show(currentItem);
+            }
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            // Hide per-slot panel if used
+            if (tooltipPanel != null && tooltipPanelText != null)
+            {
+                tooltipPanel.SetActive(false);
+                return;
+            }
+
+            // Fallback hide
+            if (InventoryTooltip.instance != null)
+            {
+                InventoryTooltip.instance.Hide();
+            }
+        }
+
+        // Compose a simple tooltip string for per-slot panel
+        private string BuildTooltipText(ItemSO item)
+        {
+            if (item == null) return string.Empty;
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append(item.itemName);
+            if (!string.IsNullOrEmpty(item.itemDescription))
+            {
+                sb.AppendLine();
+                sb.Append(item.itemDescription);
+            }
+
+            if (item.isWeapon)
+            {
+                sb.AppendLine();
+                sb.Append($"Damage: {item.weaponDamage}");
+                sb.AppendLine();
+                sb.Append($"Range: {item.weaponRange}");
+                sb.AppendLine();
+                sb.Append($"Attack Rate: {item.attackRate}");
+            }
+            if (item.isArmor || item.isHelmet || item.isBoots)
+            {
+                sb.AppendLine();
+                sb.Append($"Defense: {item.defenseBonus}");
+            }
+            if (item.isAmulet && item.healthRegenFromAmulet)
+            {
+                sb.AppendLine();
+                sb.Append($"Amulet Regen: {item.healthAmountFromAmulet} hp / {item.healthRegenRateFromAmulet}s");
+            }
+            if (item.isRing)
+            {
+                sb.AppendLine();
+                sb.Append($"Crit Chance: {item.critChanceFromRing}%");
+                sb.AppendLine();
+                sb.Append($"Crit Bonus: {item.increasedDamageFromCritFromRing}%");
+            }
+
+            return sb.ToString();
         }
     }
 }

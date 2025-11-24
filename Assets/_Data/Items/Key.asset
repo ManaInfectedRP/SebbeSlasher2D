@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Key
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
   itemName: Iron Key
-  itemDescription: 
+  itemDescription: Unlocks secret doors.
   itemIcon: {fileID: 21300000, guid: 71015b1d99c211b49b4c8a80a324ff35, type: 3}
-  itemID: 0
+  itemID: 7
   isStackable: 0
   maxStackSize: 1
   isWeapon: 0
@@ -32,6 +32,13 @@ MonoBehaviour:
   isBoots: 0
   defenseBonus: 0
   weight: 0
+  isAmulet: 0
+  healthRegenFromAmulet: 0
+  healthRegenRateFromAmulet: 0
+  healthAmountFromAmulet: 0
+  isRing: 0
+  increasedDamageFromCritFromRing: 0
+  critChanceFromRing: 0
   isConsumable: 0
   healthRestore: 0
   staminaRestore: 0

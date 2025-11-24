@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Fire Sword
   m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
   itemName: Fire Sword
-  itemDescription: 
+  itemDescription: 'A burning Sword.
+
+    That destroys enemies.'
   itemIcon: {fileID: 505893271, guid: 3024ce0c94ad91e4ebfe843b207908fc, type: 3}
   itemID: 16
   isStackable: 0
