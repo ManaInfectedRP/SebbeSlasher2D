@@ -51,6 +51,8 @@ namespace Sebbe
         // Amulet regen bookkeeping
         private float nextAmuletHealTime = 0f;
         [HideInInspector] public bool hasEquippedAmulet = false;
+        // Instance of the amulet visual/effect attached to the player when an amulet with effect is equipped
+        private GameObject activeAmuletEffect = null;
 
         [Header("Animator")]
         [HideInInspector] public Animator animator;
@@ -183,6 +185,25 @@ namespace Sebbe
             if (equipmentItem.isAmulet) { equippedAmulet = equipmentItem; hasEquippedAmulet = true; }
             if (equipmentItem.isRing) { equippedRing = equipmentItem; }
 
+            // Instantiate amulet effect if this amulet provides one
+            if (equipmentItem.isAmulet && equipmentItem.hasEffect && equipmentItem.amuletEffectPrefab != null)
+            {
+                // Destroy any existing effect first
+                if (activeAmuletEffect != null)
+                {
+                    Destroy(activeAmuletEffect);
+                    activeAmuletEffect = null;
+                }
+
+                // Instantiate the effect as a child of the player so it follows position/rotation
+                activeAmuletEffect = Instantiate(equipmentItem.amuletEffectPrefab, transform);
+                if (activeAmuletEffect != null)
+                {
+                    activeAmuletEffect.transform.localPosition = Vector3.zero;
+                    activeAmuletEffect.transform.localRotation = Quaternion.identity;
+                }
+            }
+
             // If there was a previously equipped item, add it back to the player's inventory
             if (previous != null && inventory != null)
             {
@@ -224,7 +245,17 @@ namespace Sebbe
             if (slotName.ToLower() == "boots") equippedBootsItem = null;
             if (slotName.ToLower() == "key") equippedKeyItem = null;
             if (slotName.ToLower() == "key") hasEquippedKey = false;
-            if (slotName.ToLower() == "amulet") { equippedAmulet = null; hasEquippedAmulet = false; }
+            if (slotName.ToLower() == "amulet")
+            {
+                equippedAmulet = null;
+                hasEquippedAmulet = false;
+                // Destroy visual/effect attached by the amulet
+                if (activeAmuletEffect != null)
+                {
+                    Destroy(activeAmuletEffect);
+                    activeAmuletEffect = null;
+                }
+            }
             if (slotName.ToLower() == "ring") { equippedRing = null; }
 
             // Add back to player's inventory

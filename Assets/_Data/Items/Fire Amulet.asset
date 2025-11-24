@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Fire Amulet
   itemDescription: 
   itemIcon: {fileID: 1657266229, guid: 3024ce0c94ad91e4ebfe843b207908fc, type: 3}
-  itemID: 0
+  itemID: 11
   isStackable: 0
   maxStackSize: 1
   isWeapon: 0
@@ -36,6 +36,8 @@ MonoBehaviour:
   healthRegenFromAmulet: 1
   healthRegenRateFromAmulet: 5
   healthAmountFromAmulet: 10
+  hasEffect: 1
+  amuletEffectPrefab: {fileID: 1310870392353776773, guid: 7aa88b4f373a0e149b833564e27ca6d2, type: 3}
   isRing: 0
   increasedDamageFromCritFromRing: 0
   critChanceFromRing: 0

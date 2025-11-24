@@ -39,6 +39,8 @@ namespace Sebbe
         public bool healthRegenFromAmulet = false;
         public float healthRegenRateFromAmulet;
         public float healthAmountFromAmulet;
+        public bool hasEffect = false;
+        public GameObject amuletEffectPrefab;
         
         public bool isRing = false;
         public float increasedDamageFromCritFromRing;
