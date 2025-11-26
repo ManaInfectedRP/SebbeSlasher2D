@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2443ee5f889eb9f40bc47e61615fb075, type: 3}
+  m_Name: Arcane Amulet
+  m_EditorClassIdentifier: Assembly-CSharp::Sebbe.ItemSO
+  itemName: Arcane Amulet
+  itemDescription: 
+  itemIcon: {fileID: -1823166696, guid: 136b01e90a7a34e4db0147e1b79361ab, type: 3}
+  itemID: 17
+  isStackable: 0
+  maxStackSize: 1
+  isWeapon: 0
+  weaponAnimatorOverride: {fileID: 0}
+  weaponDamage: 0
+  weaponRange: 0
+  attackRate: 0
+  isRangedWeapon: 0
+  projectilePrefab: {fileID: 0}
+  projectileSpeed: 0
+  isEquipment: 1
+  isArmor: 0
+  isHelmet: 0
+  isBoots: 0
+  defenseBonus: 0
+  weight: 0
+  isAmulet: 1
+  healthRegenFromAmulet: 1
+  healthRegenRateFromAmulet: 5
+  healthAmountFromAmulet: 10
+  hasEffect: 1
+  amuletEffectPrefab: {fileID: 8511852748531173515, guid: 64501ece0fd150444a0d6898c5db0876, type: 3}
+  overrideAmuletEffectTransform: 1
+  amuletEffectLocalPosition: {x: 0.017, y: -0.428, z: 0}
+  amuletEffectLocalRotationEuler: {x: 0, y: 0, z: -90}
+  amuletEffectLocalScale: {x: 0.5, y: 0.5, z: 1}
+  isRing: 0
+  increasedDamageFromCritFromRing: 0
+  critChanceFromRing: 0
+  isConsumable: 0
+  healthRestore: 0
+  staminaRestore: 0
+  isKeyItem: 0

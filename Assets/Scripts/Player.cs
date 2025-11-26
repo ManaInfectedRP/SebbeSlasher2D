@@ -199,8 +199,18 @@ namespace Sebbe
                 activeAmuletEffect = Instantiate(equipmentItem.amuletEffectPrefab, transform);
                 if (activeAmuletEffect != null)
                 {
-                    activeAmuletEffect.transform.localPosition = Vector3.zero;
-                    activeAmuletEffect.transform.localRotation = Quaternion.identity;
+                    if (equipmentItem.overrideAmuletEffectTransform)
+                    {
+                        activeAmuletEffect.transform.localPosition = equipmentItem.amuletEffectLocalPosition;
+                        activeAmuletEffect.transform.localRotation = Quaternion.Euler(equipmentItem.amuletEffectLocalRotationEuler);
+                        activeAmuletEffect.transform.localScale = equipmentItem.amuletEffectLocalScale;
+                    }
+                    else
+                    {
+                        // Use the prefab's transform as authored. When instantiated with a parent,
+                        // Unity preserves world position by default for this overload; leaving it as-is
+                        // keeps the prefab's designed offset/rotation relative to the player.
+                    }
                 }
             }
 

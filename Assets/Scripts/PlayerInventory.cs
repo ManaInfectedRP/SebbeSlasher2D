@@ -39,6 +39,48 @@ namespace Sebbe
             Debug.Log($"Added {item.itemName} to inventory (slot {emptyIndex}).");
         }
 
+        // Return true if the inventory contains at least the required items (list may include duplicates)
+        public bool HasItems(List<int> requiredItemIDs)
+        {
+            if (requiredItemIDs == null || requiredItemIDs.Count == 0) return true;
+
+            var counts = new System.Collections.Generic.Dictionary<int, int>();
+            foreach (var id in requiredItemIDs)
+            {
+                if (!counts.ContainsKey(id)) counts[id] = 0;
+                counts[id]++;
+            }
+
+            var have = new System.Collections.Generic.Dictionary<int, int>();
+            foreach (var item in currentPlayerItems)
+            {
+                if (!have.ContainsKey(item.itemID)) have[item.itemID] = 0;
+                have[item.itemID]++;
+            }
+
+            foreach (var kv in counts)
+            {
+                int id = kv.Key;
+                int required = kv.Value;
+                int available = have.ContainsKey(id) ? have[id] : 0;
+                if (available < required) return false;
+            }
+
+            return true;
+        }
+
+        // Remove the specified required items from inventory (list may include duplicates). Assumes HasItems was checked.
+        public void RemoveItems(List<int> requiredItemIDs)
+        {
+            if (requiredItemIDs == null || requiredItemIDs.Count == 0) return;
+
+            // For each required id, call RemoveItem which will also update UI slots
+            foreach (var id in requiredItemIDs)
+            {
+                RemoveItem(id);
+            }
+        }
+
         public void RemoveItem(int itemID)
         {
             ItemSO item = currentPlayerItems.Find(i => i.itemID == itemID);

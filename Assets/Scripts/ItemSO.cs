@@ -42,6 +42,12 @@ namespace Sebbe
         public bool hasEffect = false;
         public GameObject amuletEffectPrefab;
         
+        [Header("Amulet Effect Settings")]
+        [Tooltip("When true, the effect's local position/rotation/scale will be applied relative to the player when spawned. Otherwise the prefab's transform will be used.")]
+        public bool overrideAmuletEffectTransform = false;
+        public Vector3 amuletEffectLocalPosition = Vector3.zero;
+        public Vector3 amuletEffectLocalRotationEuler = Vector3.zero;
+        public Vector3 amuletEffectLocalScale = Vector3.one;
         public bool isRing = false;
         public float increasedDamageFromCritFromRing;
         public float critChanceFromRing;
