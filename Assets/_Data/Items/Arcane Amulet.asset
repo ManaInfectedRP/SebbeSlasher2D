@@ -38,7 +38,7 @@ MonoBehaviour:
   healthAmountFromAmulet: 10
   hasEffect: 1
   amuletEffectPrefab: {fileID: 8511852748531173515, guid: 64501ece0fd150444a0d6898c5db0876, type: 3}
-  overrideAmuletEffectTransform: 1
+  overrideAmuletEffectTransform: 0
   amuletEffectLocalPosition: {x: 0.017, y: -0.428, z: 0}
   amuletEffectLocalRotationEuler: {x: 0, y: 0, z: -90}
   amuletEffectLocalScale: {x: 0.5, y: 0.5, z: 1}

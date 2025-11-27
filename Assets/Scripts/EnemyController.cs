@@ -30,6 +30,12 @@ namespace Sebbe
         [SerializeField] protected int attackDamage = 1;
         [SerializeField] protected float attackCooldown = 1f;
 
+        [Header("Knockback")]
+        [SerializeField] protected float knockbackForce = 5f;
+        [SerializeField] protected float knockbackDuration = 0.18f;
+        [SerializeField] [Range(0f,2f)] protected float knockbackUpward = 0.45f;
+        [SerializeField] protected float knockbackInvulnerability = 0.25f;
+
         protected Transform targetPlayer;
         protected float lastAttackTime = -999f;
 
@@ -289,6 +295,30 @@ namespace Sebbe
                 if (player != null)
                 {
                     player.TakeDamage((float)attackDamage);
+                    // Apply knockback to player if Rigidbody2D present
+                    var prb = player.GetComponent<Rigidbody2D>();
+                    if (prb != null)
+                    {
+                        Vector2 knockbackDir = (h.transform.position - transform.position).normalized;
+                        // Add upward component so knockback has an arc
+                        Vector2 withUp = new Vector2(knockbackDir.x, knockbackDir.y + knockbackUpward).normalized;
+                        Vector2 applied = withUp * knockbackForce;
+
+                        // Prefer using PlayerController's ApplyKnockback so player movement doesn't immediately overwrite physics.
+                        var pc = player.GetComponent<PlayerController>();
+                        if (pc != null)
+                        {
+                            pc.ApplyKnockback(applied, knockbackDuration, knockbackInvulnerability);
+                        }
+                        else
+                        {
+                            prb.AddForce(applied, ForceMode2D.Impulse);
+                            // try to set invulnerability on controller if present (defensive)
+                            var pc2 = player.GetComponent<PlayerController>();
+                            if (pc2 != null) pc2.ApplyKnockback(applied, knockbackDuration, knockbackInvulnerability);
+                        }
+                    }
+                    
                     continue;
                 }
 

@@ -62786,6 +62786,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4647212198659356699, guid: 9873bb0a3c3206249afb6f6b572d53fa, type: 3}
     - target: {fileID: 2638756064965273984, guid: 3a559c54eeb99044799b9ed29de81803, type: 3}
+      propertyPath: promptLocalOffset.y
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2638756064965273984, guid: 3a559c54eeb99044799b9ed29de81803, type: 3}
       propertyPath: tradeRecipes.Array.size
       value: 1
       objectReference: {fileID: 0}

@@ -66,6 +66,35 @@ namespace Sebbe{
             if (rb != null) originalGravityScale = rb.gravityScale;
         }
 
+        // Knockback state
+        private bool isKnockback = false;
+        private float knockbackTimer = 0f;
+        // Invulnerability state (used during knockback to prevent multiple hits)
+        private bool isInvulnerable = false;
+        private float invulnerableTimer = 0f;
+
+        // Called by other systems to apply an immediate knockback velocity and temporarily disable player control.
+        // invulDuration: how long the player should be invulnerable after the knockback starts (can be 0).
+        public void ApplyKnockback(Vector2 velocity, float duration, float invulDuration = 0f)
+        {
+            if (rb == null) rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = velocity;
+            }
+            isKnockback = true;
+            knockbackTimer = Mathf.Max(0f, duration);
+
+            isInvulnerable = invulDuration > 0f;
+            invulnerableTimer = Mathf.Max(0f, invulDuration);
+        }
+
+        // Query invulnerability from other systems
+        public bool IsInvulnerable()
+        {
+            return isInvulnerable;
+        }
+
         void Update()
         {
             //Movement Input
@@ -228,6 +257,31 @@ namespace Sebbe{
         }
         void FixedUpdate()
         {
+            // If player is currently knocked back, skip normal movement updates so physics/knockback can play out
+            if (isKnockback)
+            {
+                // advance timers
+                knockbackTimer -= Time.fixedDeltaTime;
+                if (invulnerableTimer > 0f)
+                {
+                    invulnerableTimer -= Time.fixedDeltaTime;
+                    if (invulnerableTimer <= 0f)
+                    {
+                        invulnerableTimer = 0f;
+                        isInvulnerable = false;
+                    }
+                }
+
+                // while knockback is active, skip normal movement so velocity isn't overwritten
+                if (knockbackTimer > 0f)
+                {
+                    return;
+                }
+
+                // knockback finished
+                isKnockback = false;
+            }
+
             if (isClimbing)
             {
                 rb.linearVelocity = new Vector2(horizontal * speed, vertical * climbSpeed);

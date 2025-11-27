@@ -228,7 +228,7 @@ namespace Sebbe
 
             // Feedback
             if (FloatingTextManager.instance != null)
-                FloatingTextManager.instance.Spawn($"Received {r.resultItem.itemName}", Player.instance.transform.position + Vector3.up * 1.2f, Color.green, false, 1.2f);
+                FloatingTextManager.instance.Spawn($"Received {r.resultItem.itemName}", Player.instance.transform.position + Vector3.up * 1f, Color.green, false, 1.2f);
             if (audioSource != null && purchaseClip != null) audioSource.PlayOneShot(purchaseClip);
 
             Debug.Log($"Trade succeeded: Received {r.resultItem.itemName}");

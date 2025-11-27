@@ -335,6 +335,10 @@ namespace Sebbe
 
         public void TakeDamage(float damage)
         {
+            // If player controller indicates invulnerability (e.g., during knockback), ignore damage
+            var pcCheck = GetComponent<PlayerController>();
+            if (pcCheck != null && pcCheck.IsInvulnerable()) return;
+
             // Apply damage reduction from equipped armor (percentage 0-100)
             float reductionPercent = 0f;
             if (EquipmentManager.instance != null)
